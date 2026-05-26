@@ -1,11 +1,8 @@
+const express = require('express');
+const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
 const path = require('path');
-
 const PDFDocument = require('pdfkit');
-
-const express = require('express');
-const path = require('path');
-const sqlite3 = require('sqlite3').verbose();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
@@ -29,9 +26,7 @@ const db = new sqlite3.Database(path.join(__dirname, 'database.db'), (err) => {
     else console.log('💾 Conectado exitosamente a database.db a través de Node.js');
 });
 
-
-
-
+// 🗄️ AUTOMATIZACIÓN DEL ESQUEMA (Para Render y entornos limpios)
 const schemaPath = path.join(__dirname, 'schema.sql');
 if (fs.existsSync(schemaPath)) {
     const schemaSql = fs.readFileSync(schemaPath, 'utf8');
@@ -45,6 +40,7 @@ if (fs.existsSync(schemaPath)) {
 } else {
     console.log("⚠️ No se encontró el archivo schema.sql para inicializar las tablas.");
 }
+
 
 
 
