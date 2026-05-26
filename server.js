@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+
 const PDFDocument = require('pdfkit');
 
 const express = require('express');
@@ -25,6 +28,25 @@ const db = new sqlite3.Database(path.join(__dirname, 'database.db'), (err) => {
     if (err) console.error('⚠️ Error al conectar con SQLite:', err.message);
     else console.log('💾 Conectado exitosamente a database.db a través de Node.js');
 });
+
+
+
+
+const schemaPath = path.join(__dirname, 'schema.sql');
+if (fs.existsSync(schemaPath)) {
+    const schemaSql = fs.readFileSync(schemaPath, 'utf8');
+    db.exec(schemaSql, (err) => {
+        if (err) {
+            console.error("❌ Error crítico al inyectar el esquema SQL:", err.message);
+        } else {
+            console.log("🗄️ Tablas de la base de datos estructuradas con éxito desde schema.sql");
+        }
+    });
+} else {
+    console.log("⚠️ No se encontró el archivo schema.sql para inicializar las tablas.");
+}
+
+
 
 // 🔒 MIDDLEWARE DE CONTROL DE ACCESO (Verificación de Sesión vía JWT)
 const verificarSesion = (req, res, next) => {
