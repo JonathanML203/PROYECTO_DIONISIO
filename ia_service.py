@@ -29,16 +29,16 @@ def predict():
     if len(vals) != 11:
         return jsonify({"error": f"Se esperaban 11 respuestas, se recibieron {len(vals)}"}), 400
 
-    # Estructurar el DataFrame para alimentar al modelo de Machine Learning
+    # Estructurar el DataFrame con los caracteres exactos (\xa0) que exige CatBoost
     df = pd.DataFrame([{
         "Feeling tired or having little energy": vals[0],
-        "Moving or speaking so slowly that other people could have noticed  Or the opposite\x83  being so fidgety or restless that you have been moving around a lot more than usual": vals[1],
+        "Moving or speaking so slowly that other people could have noticed\xa0 Or the opposite\x83\xa0 being so fidgety or restless that you have been moving around a lot more than usual": vals[1],
         "Thoughts that you would be better off dead or of hurting yourself in some way": vals[2],
         "Trouble falling or staying asleep, or sleeping too much": vals[3],
         "Trouble concentrating on things, such as reading the newspaper or watching television": vals[4],
         "Little interest or pleasure in doing things": vals[5],
         "Feeling down, depressed, or hopeless": vals[6],
-        "Feeling bad about yourself\x83  or that you are a failure or have let yourself or your family down": vals[7],
+        "Feeling bad about yourself\x83\xa0 or that you are a failure or have let yourself or your family down": vals[7],
         "Financial Pressure": vals[8],
         "Sleep Quality": vals[9],
         "Study Pressure": vals[10]
@@ -47,15 +47,13 @@ def predict():
     # Realizar la predicción con el modelo .pkl
     pred = model.predict(df)
     
-    # Regresar el resultado a Node.js en formato JSON
+    # Regresar el resultado a Node.js en formato de texto para compatibilidad con EJS
     return jsonify({
         "status": "success",
-        "prediccion": int(pred.item())
+        "prediccion": str(pred[0])
     })
 
 
-
 if __name__ == '__main__':
-    import os
     port = int(os.environ.get('PORT', 5001))
     app.run(host='0.0.0.0', port=port)
