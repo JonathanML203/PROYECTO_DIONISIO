@@ -29,20 +29,9 @@ def predict():
     if len(vals) != 11:
         return jsonify({"error": f"Se esperaban 11 respuestas, se recibieron {len(vals)}"}), 400
 
-    # Estructurar el DataFrame con los caracteres exactos (\xa0) que exige CatBoost
-    df = pd.DataFrame([{
-        "Feeling tired or having little energy": vals[0],
-        "Moving or speaking so slowly that other people could have noticed\xa0 Or the opposite\x83\xa0 being so fidgety or restless that you have been moving around a lot more than usual": vals[1],
-        "Thoughts that you would be better off dead or of hurting yourself in some way": vals[2],
-        "Trouble falling or staying asleep, or sleeping too much": vals[3],
-        "Trouble concentrating on things, such as reading the newspaper or watching television": vals[4],
-        "Little interest or pleasure in doing things": vals[5],
-        "Feeling down, depressed, or hopeless": vals[6],
-        "Feeling bad about yourself\x83\xa0 or that you are a failure or have let yourself or your family down": vals[7],
-        "Financial Pressure": vals[8],
-        "Sleep Quality": vals[9],
-        "Study Pressure": vals[10]
-    }])
+    # 🌟 SOLUCIÓN INTEGRAL: Asignar las columnas directamente desde los metadatos del modelo
+    # Esto elimina cualquier riesgo de discrepancia por espacios dobles o caracteres ocultos
+    df = pd.DataFrame([vals], columns=model.feature_names_)
     
     # Realizar la predicción con el modelo .pkl
     pred = model.predict(df)
