@@ -37,11 +37,13 @@ def predict():
     pred = model.predict(df)
     
     # Regresar el resultado a Node.js en formato de texto para compatibilidad con EJS
+    
+
+    # En ia_service.py
     return jsonify({
         "status": "success",
-        "prediccion": str(pred[0])
+        "prediccion": str(pred[0][0])  # 🌟 Esto envía "4" en vez de "[4]"
     })
-
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5001))
