@@ -236,9 +236,13 @@ app.post('/alumno/prueba', verificarSesion, async (req, res) => {
 
                 const dataIA = await responseIA.json();
 
-                // 3. Renderizar la tarjeta del veredicto arrojado por el modelo .pkl
-                res.render('resultado_rutina', { prediccion: dataIA.prediccion });
+                // 🌟 PARCHE DE INGENIERÍA: Quitamos los corchetes y forzamos un entero puro
+                // Convierte "[4]" o "4" directamente en el número 4
+                const valorLimpio = String(dataIA.prediccion).replace(/[\[\]]/g, '');
+                const puntuacionNumero = parseInt(valorLimpio, 10);
 
+                // 3. Renderizar la tarjeta pasando el número limpio a la plantilla
+                res.render('resultado_rutina', { prediccion: puntuacionNumero });
             } catch (errorIA) {
                 console.error("⚠️ Error de enlace híbrido:", errorIA.message);
                 res.send(`
